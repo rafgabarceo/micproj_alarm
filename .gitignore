@@ -1,2 +1,5 @@
 .vscode
 *.json
+*.o
+*.hex
+*.out
