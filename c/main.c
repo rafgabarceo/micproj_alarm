@@ -15,6 +15,8 @@
 #define ROWS 4
 #define COLS 4
 
+#define LIGHT_SENS_FAC 1000
+
 uint8_t keyMap[ROWS][COLS] = { // key definitions
     {1, 4, 7, 254},
     {2, 5, 8, 0},
@@ -53,7 +55,7 @@ int main(){
         readADC();
         uint16_t _currentReading = currentReading;
         if(alarmState == 0){
-            if(_currentReading < 1000){
+            if(_currentReading < LIGHT_SENS_FAC){
                 PORTC |= (1 << PORTC0);
                 lq_setCursor(&device, 0, 0);
                 lq_print(&device, "Interference!!!");
