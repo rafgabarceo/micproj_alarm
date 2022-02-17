@@ -5,15 +5,6 @@
 #include <stdio.h>
 #include <util/delay.h>
 
-#define KR0 PORTD0
-#define KR1 PORTD1
-#define KR2 PORTD2
-#define KR3 PORTD3
-#define KC0 PORTD4
-#define KC1 PORTD5
-#define KC2 PORTD6 
-#define KC3 PORTD7
-
 #define SCL PORTC5
 #define SDA PORTC4
 
