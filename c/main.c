@@ -4,6 +4,7 @@
 #include "../h/liquid_crystal_i2c.h"
 #include <stdio.h>
 #include <util/delay.h>
+#include <stdlib.h>
 
 #define SCL PORTC5
 #define SDA PORTC4
@@ -15,7 +16,7 @@
 #define ROWS 4
 #define COLS 4
 
-#define LIGHT_SENS_FAC 1000
+#define LIGHT_SENS_FAC 20
 
 uint8_t keyMap[ROWS][COLS] = { // key definitions
     {1, 4, 7, 254},
@@ -56,15 +57,15 @@ int main(){
         uint16_t _currentReading = currentReading;
         if(alarmState == 0){
             if(_currentReading < LIGHT_SENS_FAC){
+                lq_clear(&device);
                 PORTC |= (1 << BUZZOFF);
                 lq_setCursor(&device, 0, 0);
                 lq_print(&device, "Interference!!!");
-                lq_setCursor(&device, 1, 0);
+
                 alarmState = 1;
             } else {
                 lq_setCursor(&device, 0, 0);
                 lq_print(&device, "Monitoring...");
-                _delay_ms(700);
             }
         } else {
             uint8_t buffer[4];
@@ -121,7 +122,8 @@ int main(){
 void initADC(){
     PRR &= ~(1 << PRADC); // disable power saving for ADC
     ADMUX |= (0b11 << REFS0) | (0b0001 << MUX0);
-    ADCSRA |= (1 << ADEN) | (1 << ADSC) | (1 << ADIE) | (0b100 << ADPS0);
+    ADCSRA |= (1 << ADEN) | (1 << ADSC) | (1 << ADIE) | (0b010 << ADPS0);
+    while(ADCSRA & (1 << ADSC)); // wait for initial conversion to finish
     // ADCSRB |= (0b000 << ADTS0); // Let ADC be in free running mode
 }
 
