@@ -95,6 +95,7 @@ int main(){
                         lq_clear(&device);
                         PORTC &= ~(1 << BUZZOFF);
                         alarmState = 0;
+                        
                         break;
                     }
                 } else {
@@ -114,9 +115,7 @@ int main(){
 
 /*
 
-    Note that the LDR is high resistance when it is dark, and low resistance when there is light. 
-    Therefore, the ADC of the circuit will read a HIGH voltage when there is light. The ADC reading will drop significantly when 
-    there is something that blocks. 
+    High light = Low resistance
 
 */
 void initADC(){
@@ -124,14 +123,6 @@ void initADC(){
     ADMUX |= (0b11 << REFS0) | (0b0001 << MUX0);
     ADCSRA |= (1 << ADEN) | (1 << ADSC) | (1 << ADIE) | (0b100 << ADPS0);
     // ADCSRB |= (0b000 << ADTS0); // Let ADC be in free running mode
-}
-
-void readEEPROM(){
-
-}
-
-void writeEEPROM(){
-
 }
 
 uint8_t readKeypad(uint8_t keyPressed){
