@@ -60,12 +60,13 @@ int main(){
                 lq_clear(&device);
                 PORTC |= (1 << BUZZOFF);
                 lq_setCursor(&device, 0, 0);
-                lq_print(&device, "Interference!!!");
-
+                lq_print(&device, "ALARM ON");
+                lq_setCursor(&device, 1, 0);
+                lq_print(&device, "PIN:");
                 alarmState = 1;
             } else {
                 lq_setCursor(&device, 0, 0);
-                lq_print(&device, "Monitoring...");
+                lq_print(&device, "MONITORING");
             }
         } else {
             uint8_t buffer[4];
@@ -77,32 +78,32 @@ int main(){
                 if(keyPressed == 255){
 
                 } else if(keyPressed == 254){
-                    uint8_t check[4] = {0, 0, 0, 0};
+                    uint8_t* check = malloc(sizeof(uint8_t) * 4);
                     for(uint8_t i = 0; i < 4; i++){
                         if(buffer[i] != code[i]){
+                            lq_clear(&device);
                             keyPressed = 255;
                             digitC = 0; 
                             lq_setCursor(&device, 0, 0);
-                            lq_print(&device, "Passcode wrong!");
-                            lq_clear(&device);
-                            lq_print(&device, "Input again...");
+                            lq_print(&device, "PIN INVALID");
+                            lq_setCursor(&device, 1, 0);
+                            lq_print(&device, "PIN:");
                             digitC = 0; 
-                        } else {
-                            check[i] = 1;
+                        } else if(buffer[i] == code[i]){
+                            *(check + i) = 1;
                         }
                     }
-                    if(check[0] == 1 && check[1] == 1 && check[2] == 1 && check[3] == 1){
-                        lq_print(&device, "Passcode correct. Resetting device.");
+                    if((check[0] == 1) && (check[1] == 1) && (check[2] == 1) && (check[3] == 1)){
+                        free(check);
                         lq_clear(&device);
                         PORTC &= ~(1 << BUZZOFF);
                         alarmState = 0;
-                        
                         break;
                     }
                 } else {
                     buffer[digitC] = keyPressed;
                     sprintf(keypad, "%u", keyPressed);
-                    lq_setCursor(&device, 1, digitC);
+                    lq_setCursor(&device, 1, digitC + 4);
                     lq_print(&device, keypad);
                     digitC++;
                     _delay_ms(250);
@@ -122,7 +123,7 @@ int main(){
 void initADC(){
     PRR &= ~(1 << PRADC); // disable power saving for ADC
     ADMUX |= (0b11 << REFS0) | (0b0001 << MUX0);
-    ADCSRA |= (1 << ADEN) | (1 << ADSC) | (1 << ADIE) | (0b010 << ADPS0);
+    ADCSRA |= (1 << ADEN) | (1 << ADSC) | (1 << ADIE) | (0b001 << ADPS0);
     while(ADCSRA & (1 << ADSC)); // wait for initial conversion to finish
     // ADCSRB |= (0b000 << ADTS0); // Let ADC be in free running mode
 }
