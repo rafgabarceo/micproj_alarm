@@ -8,7 +8,7 @@
 #define SCL PORTC5
 #define SDA PORTC4
 
-#define BUZZOFF PORTB0
+#define BUZZOFF PORTC0
 #define PHRIN PORTC0
 #define LEDOUT PORTB5
 
@@ -56,7 +56,7 @@ int main(){
         uint16_t _currentReading = currentReading;
         if(alarmState == 0){
             if(_currentReading < LIGHT_SENS_FAC){
-                PORTC |= (1 << PORTC0);
+                PORTC |= (1 << BUZZOFF);
                 lq_setCursor(&device, 0, 0);
                 lq_print(&device, "Interference!!!");
                 lq_setCursor(&device, 1, 0);
@@ -93,7 +93,7 @@ int main(){
                     if(check[0] == 1 && check[1] == 1 && check[2] == 1 && check[3] == 1){
                         lq_print(&device, "Passcode correct. Resetting device.");
                         lq_clear(&device);
-                        PORTC &= ~(1 << PORTC0);
+                        PORTC &= ~(1 << BUZZOFF);
                         alarmState = 0;
                         break;
                     }
