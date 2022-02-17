@@ -79,6 +79,9 @@ int main(){
 
                 } else if(keyPressed == 254){
                     uint8_t* check = malloc(sizeof(uint8_t) * 4);
+                    for(int i = 0; i < 4; i++){
+                        *(check + i) = 0; 
+                    }
                     for(uint8_t i = 0; i < 4; i++){
                         if(buffer[i] != code[i]){
                             lq_clear(&device);
@@ -99,6 +102,8 @@ int main(){
                         PORTC &= ~(1 << BUZZOFF);
                         alarmState = 0;
                         break;
+                    } else {
+                        _delay_ms(25);
                     }
                 } else {
                     buffer[digitC] = keyPressed;
