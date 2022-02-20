@@ -67,7 +67,7 @@ int main(){
 	while(1){
 		PORTB |= (1 << PORTB3); // enables or turns on laser
 		if(alarmState == 0) { // if alarm is off
-			if(ADC > 900) { // if laser is blocked
+			if(ADC > 50) { // if laser is blocked
 				PORTC |= (1 << PORTC1); // enables or turns on buzzer
 				lq_clear(&device);
 				lq_setCursor(&device, 0, 0);
